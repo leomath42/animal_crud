@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_mongoengine import MongoEngine
+from app.resource.resource import animal
 
 database = MongoEngine()
 
@@ -7,10 +8,13 @@ database = MongoEngine()
 def create_app():
     app = Flask(__name__)
     app.secret_key = "SECRET_KEY"
+    #app.config["APPLICATION_ROOT"] = "/api"
     app.config['MONGODB_SETTINGS'] = {
         'db': 'local',
         'host': 'mongodb://localhost/local'
     }
+    app.register_blueprint(animal)
+
     return app
 
 
