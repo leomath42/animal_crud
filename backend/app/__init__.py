@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_mongoengine import MongoEngine
 from app.resource.resource import animal
+#from flask_marshmallow import Marshmallow
 
 database = MongoEngine()
 
@@ -11,11 +12,15 @@ def create_app():
     #app.config["APPLICATION_ROOT"] = "/api"
     app.config['MONGODB_SETTINGS'] = {
         'db': 'local',
-        'host': 'mongodb://localhost/local'
+        'host': 'mongodb://localhost/local',
+        "alias": "default",
     }
-    app.register_blueprint(animal)
 
     return app
+
+
+def registre_blueprints(app):
+    app.register_blueprint(animal)
 
 
 def init_database(app):
