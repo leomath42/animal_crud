@@ -1,7 +1,7 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import Home from './pages/Home'
-import AnimalForm from './pages/AnimalForm'
+import AnimalPage from './pages/AnimalPage'
 
 const Routes = () => {
     return (
@@ -11,7 +11,7 @@ const Routes = () => {
                     <Home/>
                 </Route>
                 <Route path="/new-animal" exact>
-                    <AnimalForm/>
+                    <AnimalPage/>
                 </Route>
             </Switch>
         </BrowserRouter>
