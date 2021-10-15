@@ -4,8 +4,6 @@ import AnimalForm from '../components/AnimalForm'
 const AnimalPage = () => {
     return (
         <AnimalForm className="mt-5" />
-
-
     )
 }
 

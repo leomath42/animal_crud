@@ -1,17 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useForm } from "react-hook-form"
 
 const AnimalForm = (param) => {
+    const { register, handleSubmit } = useForm();
+
+    const onSubmit = (data) => {
+        console.log(data)
+    }
     return (
         <div className={param.className}>
-            <form className="container w-50" >
+            <form onSubmit={handleSubmit(onSubmit)} className="container w-50" >
                 <div className="jumbotron p-5 bg-dark">
                     <div className="row justify-content-md-center">
                         <div className="col-12 offset-6">
+                            <div className="invisible">
+                                <input {...register("id")} type="text"/>
+                            </div>
                             <div className="form-group row g-3 align-items-center">
                                 <label for="Nome" className="col-sm-2 mt-4 col-form-label">Nome</label>
                                 <div className="col-auto">
-                                    <input type="text" id="Nome" className="form-control" aria-describedby="Nome" />
+                                    <input {...register("nome", { required: true, maxLength: 20 })} type="text" id="nome" className="form-control" aria-describedby="Nome" />
                                 </div>
                             </div>
 
@@ -20,7 +29,7 @@ const AnimalForm = (param) => {
                                     <label for="Tipo" className="col-sm-2  mt-4 col-form-label">Tipo</label>
                                 </div>
                                 <div className="col-auto">
-                                    <select className="form-select" aria-label="Tipo">
+                                    <select {...register("tipo", { required: true})} className="form-select" aria-label="Tipo">
                                         <option selected></option>
                                         <option value="cachorro">Cachorro</option>
                                         <option value="gato">Gato</option>
@@ -35,7 +44,7 @@ const AnimalForm = (param) => {
                                     <label for="Peso" className="col-form-label">Peso</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input type="text" id="Peso" className="form-control" aria-describedby="Peso" />
+                                    <input {...register("peso", { required: true})} type="text" id="Peso" className="form-control" aria-describedby="Peso" />
                                 </div>
                             </div>
 
@@ -44,7 +53,7 @@ const AnimalForm = (param) => {
                                     <label for="Data" className="col-form-label">Data de Nascimento</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input type="text" id="Data" className="form-control" aria-describedby="Data" />
+                                    <input {...register("data", { required: true})} type="text" id="Data" className="form-control" aria-describedby="Data" />
                                 </div>
                             </div>
 
