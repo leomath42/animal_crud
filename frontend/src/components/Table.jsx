@@ -3,8 +3,8 @@ import React from 'react'
 const Table = () => {
     // Mock data Table
     return (
-        <div>
-            <table>
+        <div className="table-responsive">
+            <table className="table table-striped table-sm table-dark">
                 <thead>
                     <tr>
                         <td>Data de Nascimento</td>
