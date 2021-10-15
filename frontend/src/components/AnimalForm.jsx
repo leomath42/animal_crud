@@ -5,26 +5,15 @@ import axios from 'axios'
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from 'react'
 import { Animal } from '../datatypes/animal';
+import {formatLocalDate} from '../utils/format';
+import { ErrorMessage } from '@hookform/error-message';
 
 const AnimalForm = ({ className, reloadFormPage, setReloadFormPage }) => {
-    const { register, handleSubmit } = useForm();
+    
+    const { register, handleSubmit, formState: { errors }, setValue, reset} = useForm({ mode: 'onBlur' });
+
     const history = useHistory();
     const animal = reloadFormPage;
-
-    const loadFields = (animal) => {
-        var id = document.getElementById("id");
-        var nome = document.getElementById("nome");
-        var tipo = document.getElementById("tipo");
-        var peso = document.getElementById("peso");
-        var data_nascimento = document.getElementById("data_nascimento");
-
-        id.value = id == null ? '' : id;
-        id.value = animal.id;
-        nome.value = animal.nome;
-        tipo.value = animal.tipo;
-        peso.value = animal.peso;
-        data_nascimento.value = animal.data_nascimento;
-    }
 
     const clearFields = () => {
         setReloadFormPage(new Animal())
@@ -35,39 +24,50 @@ const AnimalForm = ({ className, reloadFormPage, setReloadFormPage }) => {
     }
 
     useEffect(() => {
-        loadFields(reloadFormPage)
-        // history.push("/new-animal/");
+        // loadFields(reloadFormPage)
+        setValue('id', reloadFormPage.id, { shouldDirty: true })
+        setValue('nome', reloadFormPage.nome, { shouldDirty: true })
+        setValue('tipo', reloadFormPage.tipo, { shouldDirty: true })
+        setValue('peso', reloadFormPage.peso !== 0  ?  reloadFormPage.peso : '', { shouldDirty: true })
+        var value = reloadFormPage.data_nascimento !== "" ?  formatLocalDate(reloadFormPage.data_nascimento,'dd/MM/yyyy'): ''
+        setValue('data_nascimento', value, { shouldDirty: true })
     }, [reloadFormPage])
 
     const onSubmit = (data) => {
-        let id = reloadFormPage["id"]
-
+        let id = data["id"];
+        delete data["id"]
+        
         if (id !== 0) {
             axios.put(`/animal/${id}`, data)
                 .then(response => {
                     console.log(response);
-                    history.push("/");
+                    // history.push("/");
                 })
                 .catch(error => {
                     console.log(error);
-                });
-
+                })
+                .finally(() => {
+                    history.push("/");
+                })
         }
         else {
             axios.post('/animal/', data)
                 .then(response => {
                     console.log(response);
-                    history.push("/");
+                    // history.push("/");
                 })
                 .catch(error => {
                     console.log(error);
-                });
+                }).finally(() => {
+                    history.push("/");
+                })
         }
     }
 
     return (
         <div className={className}>
             <form onSubmit={handleSubmit(onSubmit)} className="container w-50" >
+                <ErrorMessage errors={errors} name="singleErrorInput" />
                 <div className="jumbotron p-5 bg-dark">
                     <div className="row justify-content-md-center">
                         <div className="col-12 offset-6">
@@ -110,17 +110,17 @@ const AnimalForm = ({ className, reloadFormPage, setReloadFormPage }) => {
                                     <label for="data_nascimento" className="col-form-label">Data de Nascimento</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input {...register("data_nascimento", { required: true })} type="text" id="data_nascimento" className="form-control" aria-describedby="Data" />
+                                    <input placeholder="ex: dd/mm/yyyy" {...register("data_nascimento", { required: true , pattern:'/^\d{2}\/\d{2}\/\d{4}$/'})} type="text" id="data_nascimento" className="form-control" aria-describedby="Data" />
                                 </div>
                             </div>
-
+                            
                             <div className="form-group row g-3 align-items-center">
                                 <div className="col-sm-2 col-form-label">
                                     {/* <Link to="/" className="btn-danger btn form-control">Cancelar</Link> */}
                                     <input type="button" className="btn-danger btn form-control" value="Cancelar" onClick={toHome} />
                                 </div>
                                 <div className="col-sm-2">
-                                    <input type="submit" className="btn-primary btn form-control" value="Salvar" />
+                                    <input type="submit" className="btn-primary btn form-control" value="Salvar"/>
                                 </div>
                             </div>
                         </div>

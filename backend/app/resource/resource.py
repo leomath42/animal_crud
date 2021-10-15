@@ -2,10 +2,10 @@
 from http import HTTPStatus
 
 from app.model.model import Animal, AnimalValidator, Pagination
-from flask import Blueprint, jsonify, make_response, request, render_template, render_template_string
+from flask import Blueprint, jsonify, make_response, request
 from flask_mongoengine.wtf import model_form
 from mongoengine import DoesNotExist
-from flask_cors import cross_origin
+from marshmallow import ValidationError
 
 # from flask_paginate import Pagination, get_page_parameter
 #from flask_mongoengine.pagination import Pagination
@@ -43,9 +43,7 @@ def get(_id):
 @animal.route("/", methods=["POST"])
 def post():
     json = request.get_json()
-    print("################")
     animal = AnimalValidator().load(json).save()
-    print("################")
     body = jsonify(AnimalValidator().dump(animal))
     response = make_response(body, HTTPStatus.CREATED)
     response.headers['Content-Type'] = "application/json"
@@ -65,6 +63,7 @@ def put(_id):
         response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
         return response
+
     except DoesNotExist:
         response = make_response(
             "Doesn't exist object with id '{0}'".format(_id),

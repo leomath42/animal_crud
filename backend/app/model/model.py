@@ -1,27 +1,30 @@
-import marshmallow_mongoengine as ma
-from marshmallow import fields, ValidationError, pre_load, pre_dump
-from mongoengine import DateField, Document, FloatField, StringField
 import json
-import bson
+
+import marshmallow_mongoengine as ma
+from marshmallow import ValidationError, fields, pre_load
+from mongoengine import DateField, Document, FloatField, StringField
+import dateutil.parser as dateutil
 
 
 class Animal(Document):
     data_nascimento = DateField(required=True)
-    nome = StringField(max_length=4, required=True)
-    peso = FloatField(required=True)
-    tipo = StringField(required=True)
+    nome = StringField(max_length=32, required=True)
+    peso = FloatField(max_length=5, required=True)
+    tipo = StringField(max_length=32, required=True)
 
 
 class AnimalValidator(ma.ModelSchema):
     class Meta:
         model = Animal
-    data_nascimento = fields.Date('%Y-%m-%dT%H:%M:%S%z', required=True)
+    data_nascimento = fields.Date('%Y-%m-%dT%H:%M:%S', required=True)
 
     @pre_load(pass_many=True)
     def unwrap_envelope(self, data, **kwargs):
+        date_iso_format = dateutil.parse(data["data_nascimento"]).isoformat()
+        data["data_nascimento"] = date_iso_format
+
         if "id" in data and (data["id"] == "" or data["id"] is None):
-            x = data.copy()
-            print(data["id"])
+            x = data
             del x["id"]
             return x
         return data

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 
 const Routes = () => {
     const [reloadFormPage, setReloadFormPage] = useState(new Animal());
-        
+
     return (
         <BrowserRouter>
             <Switch>
