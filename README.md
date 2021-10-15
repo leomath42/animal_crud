@@ -8,6 +8,8 @@ cd animal_crud
 
 python3 -m venv env
 
+source env/bin/activate
+
 pip3 install -r ./backend/requeriments.txt
 
 #### Depois crie um document mongo:
