@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react'
 import { Animal, AnimalPage } from '../datatypes/animal'
 import {formatLocalDate} from '../utils/format'
 import Button from './Button'
+import { useHistory } from "react-router-dom";
 // import Button from '../components/Button'
 
-const Table = ({className, page, changePage}) => {
+const Table = ({className, page, changePage, reloadFormPage, setReloadFormPage}) => {
+    // const reloadFormPage, setReloadFormPage = animalPage;
+    const history = useHistory();
 
     useEffect(() => {
         changePage()
@@ -15,6 +18,13 @@ const Table = ({className, page, changePage}) => {
     const clickDelete = (id) => {
         axios.delete(`/animal/${id}`).then((response) => {
             changePage();
+        })
+    }
+    
+    const clickGet = (id) => {
+        axios.get(`/animal/${id}`).then((response) => {
+            setReloadFormPage(response.data);
+            history.push("new-animal")
         })
     }
     return (
@@ -37,7 +47,7 @@ const Table = ({className, page, changePage}) => {
                             <td>{item.nome}</td>
                             <td>{item.tipo}</td>
                             <td>{item.peso}</td>
-                            <td>Alterar</td>
+                            <td><Button className="btn-primary btn" onClick={()=> {clickGet(item.id)}}>Alterar</Button></td>
                             <td><Button className="btn-danger btn" onClick={()=> {clickDelete(item.id)}}>Excluir</Button></td>
                         </tr>
                     ))}

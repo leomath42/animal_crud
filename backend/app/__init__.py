@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_mongoengine import MongoEngine
 from app.resource.resource import animal
+from flask_cors import CORS
 #from flask_marshmallow import Marshmallow
 
 database = MongoEngine()
+cors = CORS()
 
 
 def create_app():
@@ -15,7 +17,7 @@ def create_app():
         'host': 'mongodb://localhost/local',
         "alias": "default",
     }
-
+    cors.init_app(app)
     return app
 
 

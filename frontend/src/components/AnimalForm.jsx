@@ -3,30 +3,76 @@ import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import axios from 'axios'
 import { useHistory } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { Animal } from '../datatypes/animal';
 
-const AnimalForm = (param) => {
+const AnimalForm = ({ className, reloadFormPage, setReloadFormPage }) => {
     const { register, handleSubmit } = useForm();
     const history = useHistory();
+    const animal = reloadFormPage;
+
+    const loadFields = (animal) => {
+        var id = document.getElementById("id");
+        var nome = document.getElementById("nome");
+        var tipo = document.getElementById("tipo");
+        var peso = document.getElementById("peso");
+        var data_nascimento = document.getElementById("data_nascimento");
+
+        id.value = id == null ? '' : id;
+        id.value = animal.id;
+        nome.value = animal.nome;
+        tipo.value = animal.tipo;
+        peso.value = animal.peso;
+        data_nascimento.value = animal.data_nascimento;
+    }
+
+    const clearFields = () => {
+        setReloadFormPage(new Animal())
+    }
+    const toHome = () => {
+        clearFields();
+        history.push("/");
+    }
+
+    useEffect(() => {
+        loadFields(reloadFormPage)
+        // history.push("/new-animal/");
+    }, [reloadFormPage])
 
     const onSubmit = (data) => {
-        console.log(data)
-        axios.post('/animal/', data)
-          .then( response => {
-            console.log(response);
-            history.push("/");
-          })
-          .catch( error => {
-            console.log(error);
-          });
+        let id = reloadFormPage["id"]
+
+        if (id !== 0) {
+            axios.put(`/animal/${id}`, data)
+                .then(response => {
+                    console.log(response);
+                    history.push("/");
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+        }
+        else {
+            axios.post('/animal/', data)
+                .then(response => {
+                    console.log(response);
+                    history.push("/");
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
     }
+
     return (
-        <div className={param.className}>
+        <div className={className}>
             <form onSubmit={handleSubmit(onSubmit)} className="container w-50" >
                 <div className="jumbotron p-5 bg-dark">
                     <div className="row justify-content-md-center">
                         <div className="col-12 offset-6">
                             <div className="invisible">
-                                <input value="" {...register("id")} type="text"/>
+                                <input id="id" {...register("id")} type="text" />
                             </div>
                             <div className="form-group row g-3 align-items-center">
                                 <label for="Nome" className="col-sm-2 mt-4 col-form-label">Nome</label>
@@ -40,7 +86,7 @@ const AnimalForm = (param) => {
                                     <label for="Tipo" className="col-sm-2  mt-4 col-form-label">Tipo</label>
                                 </div>
                                 <div className="col-auto">
-                                    <select {...register("tipo", { required: true})} className="form-select" aria-label="Tipo">
+                                    <select id="tipo" {...register("tipo", { required: true })} className="form-select" aria-label="Tipo">
                                         <option selected></option>
                                         <option value="cachorro">Cachorro</option>
                                         <option value="gato">Gato</option>
@@ -55,7 +101,7 @@ const AnimalForm = (param) => {
                                     <label for="Peso" className="col-form-label">Peso</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input {...register("peso", { required: true})} type="text" id="Peso" className="form-control" aria-describedby="Peso" />
+                                    <input  {...register("peso", { required: true })} type="text" id="peso" className="form-control" aria-describedby="Peso" />
                                 </div>
                             </div>
 
@@ -64,13 +110,14 @@ const AnimalForm = (param) => {
                                     <label for="data_nascimento" className="col-form-label">Data de Nascimento</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input {...register("data_nascimento", { required: true})} type="text" id="data_nascimento" className="form-control" aria-describedby="Data" />
+                                    <input {...register("data_nascimento", { required: true })} type="text" id="data_nascimento" className="form-control" aria-describedby="Data" />
                                 </div>
                             </div>
 
                             <div className="form-group row g-3 align-items-center">
                                 <div className="col-sm-2 col-form-label">
-                                    <Link to="/" className="btn-danger btn form-control">Cancelar</Link>
+                                    {/* <Link to="/" className="btn-danger btn form-control">Cancelar</Link> */}
+                                    <input type="button" className="btn-danger btn form-control" value="Cancelar" onClick={toHome} />
                                 </div>
                                 <div className="col-sm-2">
                                     <input type="submit" className="btn-primary btn form-control" value="Salvar" />

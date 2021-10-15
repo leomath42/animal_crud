@@ -6,7 +6,7 @@ import { Animal, AnimalPage } from '../datatypes/animal'
 import axios from 'axios'
 
 
-const Home = () => {
+const Home = ({reloadFormPage, setReloadFormPage}) => {
     const [reloadPage, setReloadPage] = useState(false)
 
     const [page, setPage] = useState(new AnimalPage())
@@ -14,7 +14,6 @@ const Home = () => {
     useEffect(() => {
         axios.get('/animal/').then((response) => {
             setPage(response.data);
-            console.log(response.data)
         })
     }, [reloadPage])
 
@@ -30,7 +29,7 @@ const Home = () => {
                 </div>
             </div>
             <div className="row mt-4">
-                <Table className='col-4' page={page} changePage={changePage}></Table>
+                <Table className='col-4' reloadFormPage={reloadFormPage} setReloadFormPage={setReloadFormPage} page={page} changePage={changePage}></Table>
             </div>
         </div>
     )
