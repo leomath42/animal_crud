@@ -1,7 +1,8 @@
 import marshmallow_mongoengine as ma
-from marshmallow import fields
+from marshmallow import fields, ValidationError, pre_load, pre_dump
 from mongoengine import DateField, Document, FloatField, StringField
 import json
+import bson
 
 
 class Animal(Document):
@@ -15,6 +16,15 @@ class AnimalValidator(ma.ModelSchema):
     class Meta:
         model = Animal
     data_nascimento = fields.Date('%Y-%m-%dT%H:%M:%S%z', required=True)
+
+    @pre_load(pass_many=True)
+    def unwrap_envelope(self, data, **kwargs):
+        if "id" in data and (data["id"] == "" or data["id"] is None):
+            x = data.copy()
+            print(data["id"])
+            del x["id"]
+            return x
+        return data
 
 
 class Pagination(object):
