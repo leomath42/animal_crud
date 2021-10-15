@@ -1,12 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form"
+import axios from 'axios'
+import { useHistory } from "react-router-dom";
 
 const AnimalForm = (param) => {
     const { register, handleSubmit } = useForm();
+    const history = useHistory();
 
     const onSubmit = (data) => {
         console.log(data)
+        axios.post('/animal/', data)
+          .then( response => {
+            console.log(response);
+            history.push("/");
+          })
+          .catch( error => {
+            console.log(error);
+          });
     }
     return (
         <div className={param.className}>
@@ -15,7 +26,7 @@ const AnimalForm = (param) => {
                     <div className="row justify-content-md-center">
                         <div className="col-12 offset-6">
                             <div className="invisible">
-                                <input {...register("id")} type="text"/>
+                                <input value="" {...register("id")} type="text"/>
                             </div>
                             <div className="form-group row g-3 align-items-center">
                                 <label for="Nome" className="col-sm-2 mt-4 col-form-label">Nome</label>
@@ -50,10 +61,10 @@ const AnimalForm = (param) => {
 
                             <div className="form-group row g-3 align-items-center">
                                 <div className="col-sm-2 col-form-label">
-                                    <label for="Data" className="col-form-label">Data de Nascimento</label>
+                                    <label for="data_nascimento" className="col-form-label">Data de Nascimento</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input {...register("data", { required: true})} type="text" id="Data" className="form-control" aria-describedby="Data" />
+                                    <input {...register("data_nascimento", { required: true})} type="text" id="data_nascimento" className="form-control" aria-describedby="Data" />
                                 </div>
                             </div>
 

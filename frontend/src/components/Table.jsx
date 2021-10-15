@@ -6,26 +6,11 @@ import {formatLocalDate} from '../utils/format'
 import Button from './Button'
 // import Button from '../components/Button'
 
-const Table = (page, changePage) => {
+const Table = ({className, page, changePage}) => {
 
-    // const [reloadPage, setReloadPage] = useState(false)
-
-    // const [page, setPage] = useState(new AnimalPage())
-
-    // // Mock data Table
-    // useEffect(() => {
-    //     axios.get('/animal/').then((response) => {
-    //         setPage(response.data);
-    //         console.log(response.data)
-    //     })
-    // }, [reloadPage])
-
-    // const changePage = () => {
-    //     setReloadPage(!changePage)
-    // }
     useEffect(() => {
-        changePage();
-      }, []);
+        changePage()
+    }, []);
 
     const clickDelete = (id) => {
         axios.delete(`/animal/${id}`).then((response) => {

@@ -11,7 +11,6 @@ const Home = () => {
 
     const [page, setPage] = useState(new AnimalPage())
 
-    // Mock data Table
     useEffect(() => {
         axios.get('/animal/').then((response) => {
             setPage(response.data);
@@ -19,20 +18,19 @@ const Home = () => {
         })
     }, [reloadPage])
 
-    const changePage = () => {
-        setReloadPage(!changePage)
+    function changePage() {
+        setReloadPage(!reloadPage);
     }
 
     return (
         <div className="container">
-            <button onClick={changePage}>TESTE </button>
             <div className="row mt-5">
                 <div className="col">
                 <Link to="/new-animal" className="btn-primary btn">Novo Animal</Link>
                 </div>
             </div>
             <div className="row mt-4">
-                <Table className="col-4" page={page} changePage={()=>changePage}></Table>
+                <Table className='col-4' page={page} changePage={changePage}></Table>
             </div>
         </div>
     )
