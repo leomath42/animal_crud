@@ -4,14 +4,31 @@ from http import HTTPStatus
 from app.model.model import Animal, AnimalValidator, Pagination
 from flask import Blueprint, jsonify, make_response, request
 from flask_mongoengine.wtf import model_form
-from mongoengine import DoesNotExist
 from marshmallow import ValidationError
+from mongoengine import DoesNotExist
+from werkzeug.exceptions import HTTPException
+import json
 
 # from flask_paginate import Pagination, get_page_parameter
 #from flask_mongoengine.pagination import Pagination
 animal = Blueprint('animal', __name__, url_prefix='/animal')
 
 animalForm = model_form(Animal)
+
+
+@animal.errorhandler(HTTPException)
+def handle_exception(e):
+    """Return JSON instead of HTML for HTTP errors."""
+    # start with the correct headers and status code from the error
+    response = e.get_response()
+    # replace the body with JSON
+    response.data = json.dumps({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+    })
+    response.content_type = "application/json"
+    return response
 
 
 @animal.route("/")
