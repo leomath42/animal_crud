@@ -14,6 +14,8 @@ const Home = ({reloadFormPage, setReloadFormPage}) => {
     useEffect(() => {
         axios.get('/animal/').then((response) => {
             setPage(response.data);
+        }).catch(error => {
+            console.log(error);
         })
     }, [reloadPage])
 
