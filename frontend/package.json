@@ -1,4 +1,5 @@
-{
+{ 
+  "homepage": "https://leomath42.github.io/animal_crud/",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
