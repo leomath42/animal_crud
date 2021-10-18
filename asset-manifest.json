@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/animal_crud/static/css/main.76bc21ac.chunk.css",
+    "main.js": "/animal_crud/static/js/main.c49f6c85.chunk.js",
+    "main.js.map": "/animal_crud/static/js/main.c49f6c85.chunk.js.map",
+    "runtime-main.js": "/animal_crud/static/js/runtime-main.eded35aa.js",
+    "runtime-main.js.map": "/animal_crud/static/js/runtime-main.eded35aa.js.map",
+    "static/css/2.8c0e6b67.chunk.css": "/animal_crud/static/css/2.8c0e6b67.chunk.css",
+    "static/js/2.732a1f6e.chunk.js": "/animal_crud/static/js/2.732a1f6e.chunk.js",
+    "static/js/2.732a1f6e.chunk.js.map": "/animal_crud/static/js/2.732a1f6e.chunk.js.map",
+    "index.html": "/animal_crud/index.html",
+    "static/css/2.8c0e6b67.chunk.css.map": "/animal_crud/static/css/2.8c0e6b67.chunk.css.map",
+    "static/css/main.76bc21ac.chunk.css.map": "/animal_crud/static/css/main.76bc21ac.chunk.css.map",
+    "static/js/2.732a1f6e.chunk.js.LICENSE.txt": "/animal_crud/static/js/2.732a1f6e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.eded35aa.js",
+    "static/css/2.8c0e6b67.chunk.css",
+    "static/js/2.732a1f6e.chunk.js",
+    "static/css/main.76bc21ac.chunk.css",
+    "static/js/main.c49f6c85.chunk.js"
+  ]
+}
