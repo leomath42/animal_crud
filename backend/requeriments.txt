@@ -1,4 +1,4 @@
--e git+ssh://git@github.com/leomath42/animal_crud.git@0627c386017cebb9309e1f37bd3802073a3b9c18#egg=app&subdirectory=backend
+-e git+ssh://git@github.com/leomath42/animal_crud.git@25c0e5ddb8ec60cb268b9a56a8beb7f3ea3aa036#egg=app&subdirectory=backend
 autopep8==1.5.7
 blueprint==3.4.2
 click==8.0.3
