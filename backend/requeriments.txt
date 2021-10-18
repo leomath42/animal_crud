@@ -1,8 +1,8 @@
--e git+https://github.com/leomath42/animal_crud.git@5b4fca51cd4e186547a68d4f8abf3db34e4a339a#egg=app&subdirectory=backend
+-e git+ssh://git@github.com/leomath42/animal_crud.git@0627c386017cebb9309e1f37bd3802073a3b9c18#egg=app&subdirectory=backend
 autopep8==1.5.7
 blueprint==3.4.2
 click==8.0.3
-dnspython==2.1.0
+dnspython==1.16.0
 email-validator==1.1.3
 flake8==4.0.1
 Flask==2.0.0
@@ -12,6 +12,7 @@ flask-mongoengine==1.0.0
 flask-paginate==0.8.1
 Flask-PyMongo==2.3.0
 Flask-WTF==0.15.1
+gunicorn==20.1.0
 idna==3.3
 itsdangerous==2.0.1
 Jinja2==3.0.2
@@ -25,6 +26,7 @@ mypy-extensions==0.4.3
 pycodestyle==2.8.0
 pyflakes==2.4.0
 pymongo==3.12.0
+python-dateutil==2.8.2
 six==1.16.0
 toml==0.10.2
 typing-extensions==3.10.0.2
