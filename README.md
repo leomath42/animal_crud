@@ -2,6 +2,8 @@
 
 App feito com Flask, PyMongo e React
 
+Link do projeto: https://leomath42.github.io/animal_crud/
+
 #### Antes de executar o flask, primeiro crie uma env :
 
 cd animal_crud
