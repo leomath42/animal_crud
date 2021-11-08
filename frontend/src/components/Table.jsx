@@ -7,8 +7,8 @@ import Button from './Button'
 import { useHistory } from "react-router-dom";
 // import Button from '../components/Button'
 
-const Table = ({className, page, changePage, reloadFormPage, setReloadFormPage}) => {
-    // const reloadFormPage, setReloadFormPage = animalPage;
+const Table = ({className, page, changePage}) => {
+
     const history = useHistory();
 
     useEffect(() => {
@@ -22,10 +22,11 @@ const Table = ({className, page, changePage, reloadFormPage, setReloadFormPage})
     }
     
     const clickGet = (id) => {
-        axios.get(`/animal/${id}`).then((response) => {
-            setReloadFormPage(response.data);
-            history.push("new-animal")
-        })
+        //axios.get(`/animal/${id}`).then((response) => {
+            //setReloadFormPage(response.data);
+            //history.push("new-animal")
+        //})
+        history.push(`new-animal/${id}`)
     }
     return (
         <div className="table-responsive">

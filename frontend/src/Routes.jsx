@@ -6,19 +6,18 @@ import { Animal } from './datatypes/animal'
 import { useEffect, useState } from 'react'
 
 const Routes = () => {
-    const [reloadFormPage, setReloadFormPage] = useState(new Animal());
 
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route path="/" exact>
-                    <Home reloadFormPage={reloadFormPage} setReloadFormPage={setReloadFormPage} />
-                </Route>
-                <Route path="/new-animal" exact>
-                    <AnimalPage reloadFormPage={reloadFormPage} setReloadFormPage={setReloadFormPage} />
-                </Route>
-            </Switch>
-        </BrowserRouter>
+      <BrowserRouter>
+          <Switch>
+              <Route path="/" exact>
+                  <Home  />
+              </Route>
+              <Route path={["/new-animal", "/new-animal/:id"]} exact>
+                  <AnimalPage  />
+              </Route>
+          </Switch>
+      </BrowserRouter>
 
 
     )

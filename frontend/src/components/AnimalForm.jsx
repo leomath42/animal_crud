@@ -1,40 +1,53 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useForm } from "react-hook-form"
-import axios from 'axios'
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useForm } from "react-hook-form";
+import axios from 'axios';
+import { useHistory, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
 import { Animal } from '../datatypes/animal';
-import {formatLocalDate} from '../utils/format';
-import { ErrorMessage } from '@hookform/error-message';
+import {formatLocalDate, formatDateToDatePicker } from '../utils/format';
 
-const AnimalForm = ({ className, reloadFormPage, setReloadFormPage }) => {
+const AnimalForm = ({className}) => {
 
+  const history = useHistory();
+  const { id } = useParams();
   const [animalForm, setAnimalForm] = useState({});
+
+  const toHome = () => {
+    history.push("/");
+  }
 
   const handleInputChange = (e) => {
     setAnimalForm({...animalForm, [e.target.name]: e.target.value});
   }
 
-  const history = useHistory();
-  const toHome = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    animalForm.data_nascimento = formatLocalDate(animalForm.data_nascimento, "dd/MM/yyyy"); 
+
+    try {
+      let response = await axios.post('/animal/', animalForm);
+      console.log(response);
       history.push("/");
-  }
+    } catch (exception) {
+      console.error(exception)
+    }
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  animalForm.data_nascimento = formatLocalDate(animalForm.data_nascimento, "dd/MM/yyyy"); 
+  };
 
-  axios.post('/animal/', animalForm)
-    .then(response => {
-        console.log(response);
-    })
-    .catch(error => {
-        console.log(error);
-    }).finally(() => {
-        history.push("/");
-    })
-  }
+  // seta o formulário em caso de update
+  useEffect(
+    async () => {
+      if(id !== undefined){
+        let response = await axios.get(`/animal/${id}`);
+        var animal = new Animal({...response.data});
+        animal.data_nascimento = formatDateToDatePicker(animal.data_nascimento); 
+        setAnimalForm(animal);
+        document.querySelector('input[type="date"]').value = animal.data_nascimento;
+      }
+    }, []
+  )
 
   return (
       <div className={className}>
