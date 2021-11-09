@@ -8,18 +8,16 @@ import { useEffect, useState } from 'react'
 const Routes = () => {
 
     return (
-      <BrowserRouter>
-          <Switch>
-              <Route path="/" exact>
-                  <Home  />
-              </Route>
-              <Route path={["/new-animal", "/new-animal/:id"]} exact>
-                  <AnimalPage  />
-              </Route>
-          </Switch>
-      </BrowserRouter>
-
-
+          <BrowserRouter>
+              <Switch>
+                  <Route path="/" exact>
+                      <Home  />
+                  </Route>
+                  <Route path={["/new-animal", "/new-animal/:id"]} exact>
+                      <AnimalPage  />
+                  </Route>
+              </Switch>
+          </BrowserRouter>
     )
 }
 export default Routes

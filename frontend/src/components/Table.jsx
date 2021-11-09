@@ -11,10 +11,6 @@ const Table = ({className, page, changePage}) => {
 
     const history = useHistory();
 
-    useEffect(() => {
-        changePage()
-    }, []);
-
     const clickDelete = (id) => {
         axios.delete(`/animal/${id}`).then((response) => {
             changePage();
