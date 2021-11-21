@@ -2,7 +2,6 @@ from flask import Flask
 from flask_mongoengine import MongoEngine
 from app.resource.resource import animal
 from flask_cors import CORS
-from mongoengine import connect, disconnect
 # import dnspython
 import pymongo
 import os
@@ -14,7 +13,7 @@ cors = CORS()
 
 
 def create_app():
-    
+    print('teste')
     app = Flask(__name__)
     app.secret_key = os.getenv('SECRET_KEY') if os.getenv(
         'SECRET_KEY') is not None else os.urandom(32)
@@ -29,6 +28,12 @@ def create_app():
         app.config['MONGODB_SETTINGS'] = {
             'connect': 'false',
             'host': MONGO_URI_PRODUCTION
+        }
+    elif os.getenv("FLASK_ENV") == "test":
+        app.config['MONGODB_SETTINGS'] = {
+            'db': 'test',
+            'host': 'mongomock://localhost',
+            "alias": "default",
         }
     else:
         app.config['MONGODB_SETTINGS'] = {
@@ -46,10 +51,7 @@ def registre_blueprints(app):
 
 
 def init_database(app):
-    if os.getenv("FLASK_ENV") == "test":
-        connection = connect('mongoenginetest', host='mongomock://localhost')
-    else:
-        database.init_app(app)
+    database.init_app(app)
 
 
 if __name__ == '__main__':

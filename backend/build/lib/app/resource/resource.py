@@ -43,7 +43,6 @@ def get_all_paged():
 
 @animal.route("/<string:_id>", methods=["GET"])
 def get(_id):
-    print(Animal)
     try:
         animal = Animal.objects.get(id=_id)  # , many=True)
         body = jsonify(AnimalValidator().dump(animal))

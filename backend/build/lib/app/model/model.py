@@ -22,6 +22,7 @@ class AnimalValidator(ma.ModelSchema):
     def unwrap_envelope(self, data, **kwargs):
         date_iso_format = dateutil.parse(data["data_nascimento"]).isoformat()
         data["data_nascimento"] = date_iso_format
+
         if "id" in data and (data["id"] == "" or data["id"] is None):
             x = data
             del x["id"]
