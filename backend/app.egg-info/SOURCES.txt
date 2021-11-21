@@ -8,3 +8,4 @@ app/model/__init__.py
 app/model/model.py
 app/resource/__init__.py
 app/resource/resource.py
+test/test.py

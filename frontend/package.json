@@ -1,10 +1,11 @@
-{ 
+{
   "homepage": "https://leomath42.github.io/animal_crud/",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@hookform/error-message": "^2.0.0",
+    "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
