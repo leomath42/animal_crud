@@ -40,7 +40,7 @@ def get_all_paged():
     #x = Pagination.page(Animal, AnimalValidator, 0, 2)
     x = Pagination.page_from_request(request, Animal, AnimalValidator)
     body = x.to_json()
-    response = make_response(body, 200)
+    response = make_response(body, HTTPStatus.OK)
     response.headers['Content-Type'] = "application/json"
     return response
 
@@ -52,7 +52,7 @@ def get(_id, animal_service: AnimalService = Provide[Container.animal_service]):
     try:
         animal = animal_service.find_by_id(id=_id)
         body = jsonify(AnimalValidator().dump(animal))
-        response = make_response(body, 200)
+        response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
         return response
     except DoesNotExist:
@@ -64,11 +64,12 @@ def get(_id, animal_service: AnimalService = Provide[Container.animal_service]):
 
 
 @animal.route("/", methods=["POST"])
-def post():
+@inject
+def post(animal_service: AnimalService = Provide[Container.animal_service]):
     json = request.get_json()
-    animal = AnimalValidator().load(json).save()
-    body = jsonify(AnimalValidator().dump(animal))
-    response = make_response(body, HTTPStatus.CREATED)
+    animal = animal_service.save(json)
+    animal = jsonify(AnimalValidator().dump(animal))
+    response = make_response(animal, HTTPStatus.CREATED)
     response.headers['Content-Type'] = "application/json"
     return response
 
@@ -80,8 +81,7 @@ def put(_id):
         animal_aux = AnimalValidator().load(json)
         Animal.objects(id=_id).update(**animal_aux.to_mongo())
         animal = Animal.objects.get(id=_id)
-        # animal = Animal.objects(id=_id)
-        # animal = AnimalValidator().update(animal, json)
+
         body = jsonify(AnimalValidator().dump(animal))
         response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
