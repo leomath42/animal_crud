@@ -9,6 +9,10 @@ from mongoengine import DoesNotExist
 from werkzeug.exceptions import HTTPException
 import json
 
+from app.containers import Container
+from dependency_injector.wiring import Provide, inject
+from app.service.service import AnimalService
+
 # from flask_paginate import Pagination, get_page_parameter
 #from flask_mongoengine.pagination import Pagination
 animal = Blueprint('animal', __name__, url_prefix='/animal')
@@ -42,10 +46,11 @@ def get_all_paged():
 
 
 @animal.route("/<string:_id>", methods=["GET"])
-def get(_id):
-    print(Animal)
+@inject
+def get(_id, animal_service: AnimalService = Provide[Container.animal_service]):
+
     try:
-        animal = Animal.objects.get(id=_id)  # , many=True)
+        animal = animal_service.find_by_id(id=_id)
         body = jsonify(AnimalValidator().dump(animal))
         response = make_response(body, 200)
         response.headers['Content-Type'] = "application/json"

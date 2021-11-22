@@ -3,6 +3,8 @@ from flask_mongoengine import MongoEngine
 from app.resource.resource import animal
 from flask_cors import CORS
 from mongoengine import connect, disconnect
+from app.containers import Container
+
 # import dnspython
 import pymongo
 import os
@@ -14,8 +16,14 @@ cors = CORS()
 
 
 def create_app():
-    
+
     app = Flask(__name__)
+
+    # adicionar o container para dependency injector.
+    container = Container()
+    container.wire(packages=[__name__])
+    app.container = container
+
     app.secret_key = os.getenv('SECRET_KEY') if os.getenv(
         'SECRET_KEY') is not None else os.urandom(32)
     #app.config["APPLICATION_ROOT"] = "/api"

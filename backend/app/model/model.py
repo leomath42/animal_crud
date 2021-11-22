@@ -4,6 +4,21 @@ import marshmallow_mongoengine as ma
 from marshmallow import ValidationError, fields, pre_load
 from mongoengine import DateField, Document, FloatField, StringField
 import dateutil.parser as dateutil
+from abc import ABC, ABCMeta, abstractmethod
+
+
+class Model(Document):
+
+    @abstractmethod
+    def __init__(self) -> None:
+        raise NotImplementedError
+
+
+class ModelValidator(ma.ModelSchema):
+
+    @abstractmethod
+    def __init__(self) -> None:
+        raise NotImplementedError
 
 
 class Animal(Document):
