@@ -19,6 +19,8 @@ animal = Blueprint('animal', __name__, url_prefix='/animal')
 
 animalForm = model_form(Animal)
 
+animal_service = AnimalService(Animal, AnimalValidator, Pagination)
+
 
 @animal.errorhandler(HTTPException)
 def handle_exception(e):
@@ -46,12 +48,13 @@ def get_all_paged():
 
 
 @animal.route("/<string:_id>", methods=["GET"])
-@inject
-def get(_id, animal_service: AnimalService = Provide[Container.animal_service]):
+def get(_id):
 
     try:
         animal = animal_service.find_by_id(id=_id)
-        body = jsonify(AnimalValidator().dump(animal))
+        animal = animal_service.dump(animal)
+        body = jsonify(animal)
+
         response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
         return response
@@ -64,12 +67,14 @@ def get(_id, animal_service: AnimalService = Provide[Container.animal_service]):
 
 
 @animal.route("/", methods=["POST"])
-@inject
-def post(animal_service: AnimalService = Provide[Container.animal_service]):
+def post():
     json = request.get_json()
-    animal = animal_service.save(json)
-    animal = jsonify(AnimalValidator().dump(animal))
-    response = make_response(animal, HTTPStatus.CREATED)
+    animal = animal_service.load(json)
+    animal = animal_service.save(animal)
+    animal = animal_service.dump(animal)
+    body = jsonify(animal)
+
+    response = make_response(body, HTTPStatus.CREATED)
     response.headers['Content-Type'] = "application/json"
     return response
 
@@ -77,12 +82,13 @@ def post(animal_service: AnimalService = Provide[Container.animal_service]):
 @animal.route("/<string:_id>", methods=["PUT"])
 def put(_id):
     try:
-        json = request.get_json()
-        animal_aux = AnimalValidator().load(json)
-        Animal.objects(id=_id).update(**animal_aux.to_mongo())
-        animal = Animal.objects.get(id=_id)
 
-        body = jsonify(AnimalValidator().dump(animal))
+        json = request.get_json()
+        animal = animal_service.load(json)
+        animal = animal_service.update(_id, animal)
+        animal = animal_service.dump(animal)
+
+        body = jsonify(animal)
         response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
         return response
@@ -99,9 +105,9 @@ def put(_id):
 def delete(_id):
     try:
         # raise DoesNotExist when _id not found
-        animal = Animal.objects.get(id=_id).delete()
+        animal_service.delete(_id)
 
-        body = str(animal)  # animal.to_json()
+        body = jsonify(None)
         response = make_response(body, HTTPStatus.NO_CONTENT)
         response.headers['Content-Type'] = "application/json"
         return response
