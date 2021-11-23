@@ -44,6 +44,7 @@ def create_app():
             'host': 'mongodb://localhost/local',
             "alias": "default",
         }
+        app.testing = True
 
     cors.init_app(app)
     return app
