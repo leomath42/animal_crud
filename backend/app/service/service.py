@@ -27,7 +27,7 @@ class AnimalService(Service):
 
     def update(self, id: int, animal: Animal) -> Animal:
         # Animal.objects(id=_id).update(**animal_aux.to_mongo())
-        self.model.objects(id).update(**animal)
+        self.model.objects(id).update(**animal.to_mongo())
         animal = self.model.objects.get(id)
         return animal
 
