@@ -1,2 +1,4 @@
 . .. .data .env .git
 .env/*
+.data/*
+__pycache__/
