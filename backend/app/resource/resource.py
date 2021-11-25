@@ -9,11 +9,17 @@ from mongoengine import DoesNotExist
 from werkzeug.exceptions import HTTPException
 import json
 
+from app.containers import Container
+from dependency_injector.wiring import Provide, inject
+from app.service.service import AnimalService
+
 # from flask_paginate import Pagination, get_page_parameter
 #from flask_mongoengine.pagination import Pagination
 animal = Blueprint('animal', __name__, url_prefix='/animal')
 
 animalForm = model_form(Animal)
+
+animal_service = AnimalService(Animal, AnimalValidator, Pagination)
 
 
 @animal.errorhandler(HTTPException)
@@ -36,17 +42,20 @@ def get_all_paged():
     #x = Pagination.page(Animal, AnimalValidator, 0, 2)
     x = Pagination.page_from_request(request, Animal, AnimalValidator)
     body = x.to_json()
-    response = make_response(body, 200)
+    response = make_response(body, HTTPStatus.OK)
     response.headers['Content-Type'] = "application/json"
     return response
 
 
 @animal.route("/<string:_id>", methods=["GET"])
 def get(_id):
+
     try:
-        animal = Animal.objects.get(id=_id)  # , many=True)
-        body = jsonify(AnimalValidator().dump(animal))
-        response = make_response(body, 200)
+        animal = animal_service.find_by_id(id=_id)
+        animal = animal_service.dump(animal)
+        body = jsonify(animal)
+
+        response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
         return response
     except DoesNotExist:
@@ -60,8 +69,11 @@ def get(_id):
 @animal.route("/", methods=["POST"])
 def post():
     json = request.get_json()
-    animal = AnimalValidator().load(json).save()
-    body = jsonify(AnimalValidator().dump(animal))
+    animal = animal_service.load(json)
+    animal = animal_service.save(animal)
+    animal = animal_service.dump(animal)
+    body = jsonify(animal)
+
     response = make_response(body, HTTPStatus.CREATED)
     response.headers['Content-Type'] = "application/json"
     return response
@@ -70,13 +82,13 @@ def post():
 @animal.route("/<string:_id>", methods=["PUT"])
 def put(_id):
     try:
+
         json = request.get_json()
-        animal_aux = AnimalValidator().load(json)
-        Animal.objects(id=_id).update(**animal_aux.to_mongo())
-        animal = Animal.objects.get(id=_id)
-        # animal = Animal.objects(id=_id)
-        # animal = AnimalValidator().update(animal, json)
-        body = jsonify(AnimalValidator().dump(animal))
+        animal = animal_service.load(json)
+        animal = animal_service.update(_id, animal)
+        animal = animal_service.dump(animal)
+
+        body = jsonify(animal)
         response = make_response(body, HTTPStatus.OK)
         response.headers['Content-Type'] = "application/json"
         return response
@@ -93,9 +105,9 @@ def put(_id):
 def delete(_id):
     try:
         # raise DoesNotExist when _id not found
-        animal = Animal.objects.get(id=_id).delete()
+        animal_service.delete(_id)
 
-        body = str(animal)  # animal.to_json()
+        body = jsonify(None)
         response = make_response(body, HTTPStatus.NO_CONTENT)
         response.headers['Content-Type'] = "application/json"
         return response

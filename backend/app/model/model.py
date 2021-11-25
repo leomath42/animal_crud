@@ -4,6 +4,21 @@ import marshmallow_mongoengine as ma
 from marshmallow import ValidationError, fields, pre_load
 from mongoengine import DateField, Document, FloatField, StringField
 import dateutil.parser as dateutil
+from abc import ABC, ABCMeta, abstractmethod
+
+
+class Model(Document):
+
+    @abstractmethod
+    def __init__(self) -> None:
+        raise NotImplementedError
+
+
+class ModelValidator(ma.ModelSchema):
+
+    @abstractmethod
+    def __init__(self) -> None:
+        raise NotImplementedError
 
 
 class Animal(Document):
@@ -22,7 +37,6 @@ class AnimalValidator(ma.ModelSchema):
     def unwrap_envelope(self, data, **kwargs):
         date_iso_format = dateutil.parse(data["data_nascimento"]).isoformat()
         data["data_nascimento"] = date_iso_format
-
         if "id" in data and (data["id"] == "" or data["id"] is None):
             x = data
             del x["id"]

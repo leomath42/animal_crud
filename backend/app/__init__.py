@@ -2,6 +2,9 @@ from flask import Flask
 from flask_mongoengine import MongoEngine
 from app.resource.resource import animal
 from flask_cors import CORS
+from mongoengine import connect, disconnect
+from app.containers import Container
+
 # import dnspython
 import pymongo
 import os
@@ -13,7 +16,14 @@ cors = CORS()
 
 
 def create_app():
+
     app = Flask(__name__)
+
+    # adicionar o container para dependency injector.
+    container = Container()
+    container.wire(packages=[__name__])
+    app.container = container
+
     app.secret_key = os.getenv('SECRET_KEY') if os.getenv(
         'SECRET_KEY') is not None else os.urandom(32)
     #app.config["APPLICATION_ROOT"] = "/api"
@@ -34,6 +44,7 @@ def create_app():
             'host': 'mongodb://localhost/local',
             "alias": "default",
         }
+        app.testing = True
 
     cors.init_app(app)
     return app
@@ -44,7 +55,10 @@ def registre_blueprints(app):
 
 
 def init_database(app):
-    database.init_app(app)
+    if os.getenv("FLASK_ENV") == "test":
+        connection = connect('mongoenginetest', host='mongomock://localhost')
+    else:
+        database.init_app(app)
 
 
 if __name__ == '__main__':
