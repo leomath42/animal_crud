@@ -38,6 +38,12 @@ def create_app():
             'connect': 'false',
             'host': MONGO_URI_PRODUCTION
         }
+    if os.getenv("FLASK_ENV") == "test":
+        app.config['MONGODB_SETTINGS'] = {
+            'db': 'test',
+            'host': 'mongodb://localhost/test',
+            "alias": "default",
+        }
     else:
         app.config['MONGODB_SETTINGS'] = {
             'db': 'local',
@@ -55,10 +61,10 @@ def registre_blueprints(app):
 
 
 def init_database(app):
-    if os.getenv("FLASK_ENV") == "test":
-        connection = connect('mongoenginetest', host='mongomock://localhost')
-    else:
-        database.init_app(app)
+    # if os.getenv("FLASK_ENV") == "test":
+    #     connection = connect('mongoenginetest', host='mongomock://localhost')
+    # else:
+    database.init_app(app)
 
 
 if __name__ == '__main__':
