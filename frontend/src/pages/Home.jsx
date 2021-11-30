@@ -15,6 +15,8 @@ const Home = () => {
 
   const dispatch = useDispatch();
   const page2  = useSelector(state => state.animalPage);
+  const msg  = useSelector(state => state.msg);
+  console.log(msg)
 
   useEffect(() =>{
     if(Object.entries(page2).length == 0){
@@ -22,7 +24,7 @@ const Home = () => {
     }
     //dispatch(fetchAnimalPage())
     console.count();
-  }, [page2])
+  }, [])
 
   const [page, setPage] = useState(new AnimalPage())
 
